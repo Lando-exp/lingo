@@ -1,0 +1,15 @@
+input {
+    width: 50px;  /* Larghezza del quadrato */
+    height: 50px; /* Altezza del quadrato */
+    font-size: 20px; /* Dimensione del testo */
+    text-align: center; /* Centrare il testo */
+    border: 2px solid black; /* Bordo visibile */
+    border-radius: 5px; /* Angoli leggermente arrotondati */
+    outline: none; /* Rimuove il contorno al focus */
+}
+
+/* Cambia stile quando l'input è focalizzato */
+input:focus {
+    border-color: blue;
+    box-shadow: 0 0 5px blue;
+}
