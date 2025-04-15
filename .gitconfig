@@ -1,0 +1,9 @@
+[user]
+	name = Alessandro Gorni
+	email = link23.061@gmail.com
+[http]
+	proxy = http://prova:prova@172.16.0.1:8080
+	sslBackend = openssl
+	schannelCheckRevoke = true
+[credential "http://172.16.0.1:8080"]
+	provider = generic
