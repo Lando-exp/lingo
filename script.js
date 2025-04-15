@@ -1,11 +1,35 @@
 var parole = [
-    "lupo", "verde", "gatto", "fiore", "luce",
-    "albero", "piano", "banca", "sedia", "ruota",
-    "stella", "vento", "acqua", "notte", "sole",
-    "maree", "isola", "libro", "tavolo", "porta",
-    "cielo", "fuoco", "gioco", "tempo", "miele",
-    "piano", "canto", "sogno", "vento", "amore"
-];
+	"lupo",
+	"verde",
+	"gatto",
+	"fiore",
+	"luce",
+	"albero",
+	"piano",
+	"banca",
+	"sedia",
+	"ruota",
+	"stella",
+	"vento",
+	"acqua",
+	"notte",
+	"sole",
+	"maree",
+	"isola",
+	"libro",
+	"tavolo",
+	"porta",
+	"cielo",
+	"fuoco",
+	"gioco",
+	"tempo",
+	"miele",
+	"piano",
+	"canto",
+	"sogno",
+	"vento",
+	"amore",
+]
 
 var nTentativi = 0
 
@@ -56,7 +80,6 @@ function stampaLettereIndizio() {
 			document.querySelector(nCella).value = parolaConIndizi[c]
 
 			if (document.querySelector(nCella).value != "") {
-
 				document.querySelector(nCella).readOnly = true
 			}
 			/*
@@ -64,6 +87,7 @@ function stampaLettereIndizio() {
 
              if (document.querySelector(nCella).value == "") {
                  document.querySelector(nCella).readOnly = false
+				 sd
              }
             */
 		}
@@ -79,17 +103,17 @@ function tentativi() {
 
 			if (document.querySelector(nCella).value === "") {
 				alert("errore: uno o più campi sono vuoti")
-				break;
+				break
 			}
-				tentativo += document.querySelector(nCella).value.toUpperCase()
-			}
+			tentativo += document.querySelector(nCella).value.toUpperCase()
+		}
 
-			localStorage.setItem("tentativo_"+nTentativi, ": ", tentativo)
-			console.log("tentativo n", nTentativi, ": ", tentativo)
-			tentativo = ""
-		
-			nTentativi++
-		}	
+		localStorage.setItem("tentativo_" + nTentativi, ": ", tentativo)
+		console.log("tentativo n", nTentativi, ": ", tentativo)
+		tentativo = ""
+
+		nTentativi++
+	}
 }
 
 function nCasuale(parola) {
