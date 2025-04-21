@@ -290,12 +290,6 @@ function conteggioLivello() {
 		let conteggioLivello = partita.livello
 		document.querySelector("#numeroLivello").innerHTML = "Livello: " + conteggioLivello
 		console.log("livello:", conteggioLivello)
-
-		if (partita.livello1.t4 != "") {
-			document.querySelector("#ris").innerHTML = "Complimenti! Hai totalizzato n punti"
-			document.querySelector("#livelloSuccessivoButton").disabled = true
-			document.querySelector("#livelloSuccessivoButton").style.display = "none"
-		}
 	}
 }
 
@@ -303,7 +297,7 @@ function livelloSucessivo() {
 	let partita = JSON.parse(localStorage.getItem("partita"))
 
 	if (partita.livello < 3) {
-		partita.livello += 1
+		partita.livello++
 		localStorage.setItem("partita", JSON.stringify(partita))
 
 		// Ricrea la griglia e ricarica gli indizi
@@ -318,7 +312,7 @@ function livelloSucessivo() {
 
 		document.querySelector("#ris").innerHTML = ""
 	} else {
-		document.querySelector("#ris").innerHTML = "Hai completato tutti i livelli! 🎉"
+		document.querySelector("#ris").innerHTML = "Hai completato tutti i livelli!"
 		document.querySelector("#livelloSuccessivoButton").disabled = true
 		document.querySelector("#livelloSuccessivoButton").style.display = "none"
 	}
