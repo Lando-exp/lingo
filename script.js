@@ -43,6 +43,7 @@ function paroles() {
 
 function salvaJson() {
 	partita = {
+		livello: 1,
 		punteggio: 10,
 
 		livello1: {
@@ -86,8 +87,11 @@ function salvaJson() {
 }
 
 function preparaGioco() {
+	document.querySelector("#livelloSuccessivoButton").disabled = true
+	document.querySelector("#livelloSuccessivoButton").style.display = "none"
+
 	// stampare
-	gestioneLivello()
+	conteggioLivello()
 
 	stampaGriglia()
 
@@ -96,8 +100,6 @@ function preparaGioco() {
 	salvaJson()
 
 	stampaLettereIndizio()
-
-	console.log("drop", partita.livello1.tentativi.t1[0])
 }
 
 function stampaLettereIndizio() {
@@ -108,38 +110,36 @@ function stampaLettereIndizio() {
 		console.error("ERRORE: non è presente nessun salvataggio nel localStorage")
 		alert("ERRORE: non è presente nessun salvataggio nel localStorage")
 	} else {
-		for (let i = 1; i <= 3; i++) {
-			let keyNumLivello = "livello" + i
-			let keyNumTentativi = ""
-			let parola = partita[keyNumLivello].parola
-			console.log("\n\n", parola)
+		const livelloCorrente = partita.livello
+		const keyNumLivello = "livello" + livelloCorrente
+		const parola = partita[keyNumLivello].parola
 
-			let arrayParola = parola.split("")
+		console.log("parola da indovinare del livello corrente:", parola)
 
-			letteraSuggerita = arrayParola[0].toUpperCase()
-			console.log("lettera suggerita:", letteraSuggerita)
+		let arrayParola = parola.split("")
+		let letteraSuggerita = arrayParola[0].toUpperCase()
+		console.log("lettera suggerita:", letteraSuggerita)
 
-			let parolaConIndizi = [letteraSuggerita, "", "", "", ""]
+		let parolaConIndizi = [letteraSuggerita, "", "", "", ""]
 
-			for (let j = 0; j <= 4; j++) {
-				keyNumTentativi = "t" + j
+		for (let j = 0; j <= 4; j++) {
+			let keyNumTentativi = "t" + j
 
-				partita[keyNumLivello].tentativi[keyNumTentativi] = parolaConIndizi
-			}
+			partita[keyNumLivello].tentativi[keyNumTentativi] = parolaConIndizi
+		}
 
-			for (let r = 0; r < 5; r++) {
-				for (let c = 0; c < 5; c++) {
-					let nCella = "#cella_" + r + "_" + c
+		for (let r = 0; r < 5; r++) {
+			for (let c = 0; c < 5; c++) {
+				let nCella = "#cella_" + r + "_" + c
 
-					document.querySelector(nCella).value = partita[keyNumLivello].tentativi[keyNumTentativi][c]
-					if (document.querySelector(nCella).value != "") {
-						document.querySelector(nCella).readOnly = true
-					}
+				document.querySelector(nCella).value = parolaConIndizi[c]
+
+				if (document.querySelector(nCella).value != "") {
+					document.querySelector(nCella).readOnly = true
 				}
 			}
 		}
 	}
-
 	localStorage.setItem("partita", JSON.stringify(partita))
 }
 
@@ -150,11 +150,12 @@ function tentativi() {
 	let tentativoValido = true
 	let parolaInserita = []
 
-	const livello = "livello1"
+	const livelloCorrente = partita.livello
+	const livello = "livello" + livelloCorrente
+
 	const keyNumTentativi = "t" + nTentativi
 	//
 	let parola = partita[livello].parola
-	console.log(parola)
 
 	for (let c = 0; c < 5; c++) {
 		let nCella = "#cella_" + nTentativi + "_" + c
@@ -176,6 +177,20 @@ function tentativi() {
 		console.log(`Tentativo ${keyNumTentativi}:`, parolaInserita)
 
 		verificaTentativo(parola, parolaInserita)
+
+		// Blocca la riga attuale
+		for (let c = 0; c < 5; c++) {
+			let nCella = "#cella_" + nTentativi + "_" + c
+			document.querySelector(nCella).readOnly = true
+		}
+
+		// Abilita la prossima riga solo se esiste
+		if (nTentativi + 1 < 5) {
+			for (let c = 0; c < 5; c++) {
+				let nCella = "#cella_" + (nTentativi + 1) + "_" + c
+				document.querySelector(nCella).disabled = false
+			}
+		}
 
 		nTentativi++
 
@@ -210,48 +225,101 @@ function stampaGriglia() {
 	for (let r = 0; r < 5; r++) {
 		for (let c = 0; c < 5; c++) {
 			nCella = "cella_" + r + "_" + c
+			// Solo la riga 0 è abilitata all'inizio
+			const disabled = r === 0 ? "" : "disabled"
+
 			input += `
-                    <label>
-                        <input id="${nCella}" type="text" maxlength="1" pattern="[A-Za-z]" style="text-transform: uppercase;">
-                    </label>
-                    `
+					<label>
+						<input id="${nCella}" type="text" maxlength="1" pattern="[A-Za-z]" ${disabled} style="text-transform: uppercase;">
+					</label>
+				`
 		}
 		input += "<br><br>"
 	}
 	document.querySelector("#input").innerHTML = input
-	input += "<br>"
 }
 
 function recuperaParola() {
 	var reader = new FileReader()
 	reader.onload = function (event) {
 		var testo = event.target.result
-		document.document.querySelector("contenuto").innerHTML = testo
+		document.querySelector("contenuto").innerHTML = testo
 	}
 	reader.readAsText(file)
 }
 
 function verificaTentativo(arrayParola, arrayParolaInserita) {
-	for (let i = 0; i < 5; i++) {
-		let nCella = "cella_" + r + "_" + c
+	let parolaIndovinata = true
 
-		if (arrayParola.indexOf[i] == parolaInserita.indexOf[i] && arrayParola[i] == parolaInserita[i]) {
-			document.querySelector(nCella).readOnly
+	// Crea manualmente un nuovo array in maiuscolo senza usare .map()
+	let arrayParolaMaiuscola = []
+	for (let i = 0; i < arrayParola.length; i++) {
+		arrayParolaMaiuscola.push(arrayParola[i].toUpperCase())
+	}
+
+	for (let i = 0; i < 5; i++) {
+		let nCella = "#cella_" + nTentativi + "_" + i
+		let letteraInserita = arrayParolaInserita[i]
+		//lettera giusta in posizione giusta
+		if (arrayParolaMaiuscola[i] === letteraInserita) {
 			document.querySelector(nCella).style.backgroundColor = "lightgreen"
+			//lettera giusta in posizione sbagliata
+		} else if (arrayParolaMaiuscola.includes(letteraInserita)) {
+			document.querySelector(nCella).style.backgroundColor = "yellow"
+			parolaIndovinata = false
 		} else {
-			if (arrayParola.indexOf[i] != parolaInserita.indexOf[i] && arrayParola.include(arrayParolaInserita(i))) {
-				document.querySelector(nCella).style.backgroundColor = "yellow"
-			}
+			//lettera non presente
+			document.querySelector(nCella).style.backgroundColor = "lightgray"
+			parolaIndovinata = false
+		}
+	}
+
+	if (parolaIndovinata) {
+		document.querySelector("#ris").innerHTML = "Hai indovinato! ✅"
+		document.querySelector("#livelloSuccessivoButton").disabled = false
+		document.querySelector("#livelloSuccessivoButton").style.display = "inline-block"
+	}
+}
+
+function conteggioLivello() {
+	let partita = JSON.parse(localStorage.getItem("partita"))
+
+	if (!partita) {
+		console.error("ERRORE: Nessuna partita trovata nel localStorage.")
+	} else {
+		let conteggioLivello = partita.livello
+		document.querySelector("#numeroLivello").innerHTML = "Livello: " + conteggioLivello
+		console.log("livello:", conteggioLivello)
+
+		if (partita.livello1.t4 != "") {
+			document.querySelector("#ris").innerHTML = "Complimenti! Hai totalizzato n punti"
+			document.querySelector("#livelloSuccessivoButton").disabled = true
+			document.querySelector("#livelloSuccessivoButton").style.display = "none"
 		}
 	}
 }
 
-let livello = 3
-function gestioneLivello() {
-	let nLivello = 1
+function livelloSucessivo() {
+	let partita = JSON.parse(localStorage.getItem("partita"))
 
-	for (let i = 0; i <= livello; i++) {
-		let numLivello = "<button> type=button onclick='gestioneLivello'> Livello:  " + nLivello
-		document.querySelector("conteggioLivello").innerHTML = numLivello
+	if (partita.livello < 3) {
+		partita.livello += 1
+		localStorage.setItem("partita", JSON.stringify(partita))
+
+		// Ricrea la griglia e ricarica gli indizi
+		nTentativi = 0
+		stampaGriglia()
+		stampaLettereIndizio()
+		conteggioLivello()
+
+		// Nascondi nuovamente il pulsante
+		document.querySelector("#livelloSuccessivoButton").disabled = true
+		document.querySelector("#livelloSuccessivoButton").style.display = "none"
+
+		document.querySelector("#ris").innerHTML = ""
+	} else {
+		document.querySelector("#ris").innerHTML = "Hai completato tutti i livelli! 🎉"
+		document.querySelector("#livelloSuccessivoButton").disabled = true
+		document.querySelector("#livelloSuccessivoButton").style.display = "none"
 	}
 }
