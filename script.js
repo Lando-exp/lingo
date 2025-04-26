@@ -237,6 +237,8 @@ function tentativi() {
 function verificaTentativo(arraySoluzione, arrayParolaInserita) {
 	let parolaIndovinata = true
 
+	let lettereDisponibili = [...arraySoluzione]
+
 	for (let i = 0; i < 5; i++) {
 		let nCella = "#cella_" + nTentativi + "_" + i
 		let letteraInserita = arrayParolaInserita[i]
@@ -244,14 +246,33 @@ function verificaTentativo(arraySoluzione, arrayParolaInserita) {
 		//lettera giusta in posizione giusta
 		if (arraySoluzione[i] === letteraInserita) {
 			document.querySelector(nCella).style.backgroundColor = "lightgreen"
-			//lettera giusta in posizione sbagliata
-		} else if (arraySoluzione.includes(letteraInserita) && i !== 0) {
-			document.querySelector(nCella).style.backgroundColor = "yellow"
-			parolaIndovinata = false
+			lettereDisponibili[i] = null // questa lettera non è più disponibile
 		} else {
-			//lettera non presente
-			document.querySelector(nCella).style.backgroundColor = "lightgray"
 			parolaIndovinata = false
+		}
+	}
+
+	for (let i = 0; i < 5; i++) {
+		let nCella = "#cella_" + nTentativi + "_" + i
+		let letteraInserita = arrayParolaInserita[i]
+
+		// Se la lettera inserita NON è già corretta e in posizione giusta (non è "verde")
+		if (arraySoluzione[i] !== letteraInserita) {
+			// Cerchiamo se la lettera inserita è presente in "lettereDisponibili"
+			let index = lettereDisponibili.indexOf(letteraInserita)
+
+			// Se troviamo la lettera (letteraInserita) in "lettereDisponibili" (index diverso da -1)
+			if (index !== -1) {
+				// lettera esiste nella parola ma è in posizione sbagliata (coloriamo in giallo)
+				document.querySelector(nCella).style.backgroundColor = "yellow"
+
+				// Dopo aver usato quella lettera, la eliminiamo da "lettereDisponibili"
+				// (così non verrà più considerata per altri controlli)
+				lettereDisponibili[index] = null
+			} else {
+				// Se NON troviamo la lettera nella parola → coloriamo in GRIGIO
+				document.querySelector(nCella).style.backgroundColor = "lightgray"
+			}
 		}
 	}
 
