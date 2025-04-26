@@ -1,15 +1,52 @@
 input {
-    width: 50px;  /* Larghezza del quadrato */
-    height: 50px; /* Altezza del quadrato */
-    font-size: 20px; /* Dimensione del testo */
-    text-align: center; /* Centrare il testo */
-    border: 2px solid black; /* Bordo visibile */
-    border-radius: 5px; /* Angoli leggermente arrotondati */
-    outline: none; /* Rimuove il contorno al focus */
+	width: 50px; /* Larghezza del quadrato */
+	height: 50px; /* Altezza del quadrato */
+	font-size: 20px; /* Dimensione del testo */
+	text-align: center; /* Centrare il testo */
+	border: 2px solid black; /* Bordo visibile */
+	border-radius: 5px; /* Angoli leggermente arrotondati */
+	outline: none; /* Rimuove il contorno al focus */
 }
 
 /* Cambia stile quando l'input è focalizzato */
 input:focus {
-    border-color: blue;
-    box-shadow: 0 0 5px blue;
+	border-color: blue;
+	box-shadow: 0 0 5px blue;
+}
+
+body {
+	margin: 0;
+	height: 100vh;
+	display: flex;
+	justify-content: center; /* Centra orizzontalmente */
+	align-items: center; /* Centra verticalmente */
+	flex-direction: column; /* Se vuoi che gli elementi vadano uno sotto l'altro */
+	transform-origin: top center;
+	width: 100%;
+}
+
+.statistiche-container {
+	position: absolute;
+	top: 452px; /* quanto vuoi dall'alto */
+	left: 50%; /* parti dal centro */
+	transform: translateX(-300px); /* ti sposti di 300px a sinistra */
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start; /* allinea testo a sinistra */
+	gap: 10px;
+}
+
+.button-container {
+	position: absolute;
+	top: 65%; /* Parti dal centro verticale */
+	left: 50%; /* Parti dal centro orizzontale */
+	transform: translate(-50%, 100px); /* -50% X per centrare orizzontalmente, 100px Y per andare sotto */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+#text_risultato {
+	text-align: center;
 }

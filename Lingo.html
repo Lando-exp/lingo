@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Lingo</title>
+		<script type="text/javascript" src="script.js"></script>
+		<link rel="stylesheet" href="styles.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=2.0, maximum-scale=2.0, minimum-scale=2.0, user-scalable=no" />
+	</head>
+
+	<body onload="gioco()">
+		<h1 class="titolo">Lingo</h1>
+
+		<div id="statistiche" class="statistiche-container">
+			<div id="text_numeroLivello" class="statistiche"></div>
+			<div id="text_punti" class="statistiche">Punti: 10</div>
+		</div>
+
+		<form>
+			<div id="input"></div>
+
+			<div id="buttonContainer" class="button-container">
+				<button id="button_enter" type="button" onclick="tentativi()">ENTER</button>
+				<button type="button" id="button_avanti" onclick="livelloSuccessivo()">avanti ➔</button>
+			</div>
+		</form>
+
+		<div id="text_risultato"></div>
+	</body>
+</html>
