@@ -263,14 +263,14 @@ function verificaTentativo(arraySoluzione, arrayParolaInserita) {
 
 			// Se troviamo la lettera (letteraInserita) in "lettereDisponibili" (index diverso da -1)
 			if (index !== -1) {
-				// lettera esiste nella parola ma è in posizione sbagliata (coloriamo in giallo)
+				// lettera esiste nella parola ma è in posizione sbagliata (colore giallo)
 				document.querySelector(nCella).style.backgroundColor = "yellow"
 
 				// Dopo aver usato quella lettera, la eliminiamo da "lettereDisponibili"
 				// (così non verrà più considerata per altri controlli)
 				lettereDisponibili[index] = null
 			} else {
-				// Se NON troviamo la lettera nella parola → coloriamo in GRIGIO
+				// Se NON troviamo la lettera nella parola (colore grigio)
 				document.querySelector(nCella).style.backgroundColor = "lightgray"
 			}
 		}
